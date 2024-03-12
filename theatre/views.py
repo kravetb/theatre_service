@@ -1,8 +1,8 @@
 from django.db.models import F, Count
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
 
 from theatre.models import (
-    Actor, Genre, Play, Performance,
+    Actor, Genre, Play, Performance, TheatreHall, Reservation,
 )
 
 from theatre.serializers import (
@@ -11,6 +11,7 @@ from theatre.serializers import (
     PlayListSerializer,
     PlaySerializer,
     PlayDetailSerializer, PerformanceListSerializer, PerformanceSerializer, PerformanceDetailSerializer,
+    TheatreHallSerializer, ReservationListSerializer, ReservationSerializer,
 )
 
 
@@ -22,6 +23,15 @@ class GenreViewSet(viewsets.ModelViewSet):
 class ActorViewSet(viewsets.ModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
+
+
+class TheatreHallViewSet(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    viewsets.GenericViewSet,
+):
+    queryset = TheatreHall.objects.all()
+    serializer_class = TheatreHallSerializer
 
 
 class PlayViewSet(viewsets.ModelViewSet):
@@ -55,3 +65,13 @@ class PerformanceViewSet(viewsets.ModelViewSet):
             return PerformanceDetailSerializer
 
         return PerformanceSerializer
+
+
+class ReservationViewSet(viewsets.ModelViewSet):
+    queryset = Reservation.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return ReservationListSerializer
+
+        return ReservationSerializer
