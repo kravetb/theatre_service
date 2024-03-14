@@ -91,6 +91,9 @@ class PlayViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
 
 class PerformanceViewSet(viewsets.ModelViewSet):
     queryset = (
