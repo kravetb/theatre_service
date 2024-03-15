@@ -8,25 +8,34 @@ from rest_framework.response import Response
 from theatre.models import (
     Actor, Genre, Play, Performance, TheatreHall, Reservation,
 )
+from theatre.permissions import IsAdminOrIfAuthenticatedReadOnly
 
 from theatre.serializers import (
     ActorSerializer,
     GenreSerializer,
     PlayListSerializer,
     PlaySerializer,
-    PlayDetailSerializer, PerformanceListSerializer, PerformanceSerializer, PerformanceDetailSerializer,
-    TheatreHallSerializer, ReservationListSerializer, ReservationSerializer, PlayImageSerializer,
+    PlayDetailSerializer,
+    PerformanceListSerializer,
+    PerformanceSerializer,
+    PerformanceDetailSerializer,
+    TheatreHallSerializer,
+    ReservationListSerializer,
+    ReservationSerializer,
+    PlayImageSerializer,
 )
 
 
 class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly, )
 
 
 class ActorViewSet(viewsets.ModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly, )
 
 
 class TheatreHallViewSet(
@@ -36,10 +45,12 @@ class TheatreHallViewSet(
 ):
     queryset = TheatreHall.objects.all()
     serializer_class = TheatreHallSerializer
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly, )
 
 
 class PlayViewSet(viewsets.ModelViewSet):
     queryset = Play.objects.prefetch_related("genres", "actors")
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly, )
 
     @staticmethod
     def _params_to_ints(qs):
@@ -107,6 +118,7 @@ class PerformanceViewSet(viewsets.ModelViewSet):
                 - Count("tickets"))
             )
         )
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
     def get_queryset(self):
         date = self.request.query_params.get("date")
@@ -139,6 +151,7 @@ class ReservationViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.prefetch_related(
         "tickets__performance__play", "tickets__performance__theatre_hall"
     )
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
     def get_serializer_class(self):
         if self.action == "list":
