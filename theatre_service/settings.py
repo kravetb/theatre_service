@@ -78,9 +78,12 @@ WSGI_APPLICATION = 'theatre_service.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "HOST": "db",
+        "NAME": "app",
+        "USER": "postgres",
+        "PASSWORD": "secretpassword",
     }
 }
 
